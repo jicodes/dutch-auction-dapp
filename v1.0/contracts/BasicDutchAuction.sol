@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 
 contract BasicDutchAuction {
-    address payable public owner;
+    address payable public seller;
     uint256 public reservePrice;
     uint256 public numBlocksAuctionOpen;
     uint256 public offerPriceDecrement;
@@ -19,7 +19,7 @@ contract BasicDutchAuction {
         uint256 _numBlocksAuctionOpen,
         uint256 _offerPriceDecrement
     ) {
-        owner = payable(msg.sender);
+        seller = payable(msg.sender);
         reservePrice = _reservePrice;
         numBlocksAuctionOpen = _numBlocksAuctionOpen;
         offerPriceDecrement = _offerPriceDecrement;
@@ -46,8 +46,8 @@ contract BasicDutchAuction {
         bids[msg.sender] = msg.value;
         bidders.push(msg.sender);
 
-        // Transfer the funds to the owner and end the auction
-        owner.transfer(msg.value);
+        // Transfer the funds to the seller and end the auction
+        seller.transfer(msg.value);
         auctionEnded = true;
 
         // Assign the winner and return the winner's address
