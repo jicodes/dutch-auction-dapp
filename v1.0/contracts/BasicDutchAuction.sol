@@ -11,9 +11,6 @@ contract BasicDutchAuction {
     bool public auctionEnded;
     address public winner;
 
-    mapping(address => uint256) public bids;
-    address[] public bidders;
-
     constructor(
         uint256 _reservePrice,
         uint256 _numBlocksAuctionOpen,
@@ -32,6 +29,7 @@ contract BasicDutchAuction {
     }
 
     function bid() public payable returns (address) {
+        
         require(
             block.number <= startBlock + numBlocksAuctionOpen,
             "Auction is already ended"
@@ -42,37 +40,13 @@ contract BasicDutchAuction {
             "Bid must be higher than current price"
         );
 
-        // Register the bid
-        bids[msg.sender] = msg.value;
-        bidders.push(msg.sender);
-
-        // Transfer the funds to the seller and end the auction
-        seller.transfer(msg.value);
         auctionEnded = true;
-
-        // Assign the winner and return the winner's address
+        seller.transfer(msg.value); // Transfer the funds to the owner immediately
         winner = msg.sender;
-
-        // Refund the unsuccessful bids
-        for (uint256 i = 0; i < bidders.length; i++) {
-            if (bidders[i] != winner) {
-                refund(bidders[i]);
-            }
-        }
 
         return winner;
     }
 
-    function refund(address bidder) private {
-        uint256 amount = bids[bidder];
-        if (amount > 0) {
-            // Reset the bid amount for this bidder to 0
-            bids[bidder] = 0;
-
-            // Refund their money
-            payable(bidder).transfer(amount);
-        }
-    }
 
     function currentPrice() public view returns (uint256) {
         uint256 elapsedBlocks = block.number - startBlock;
