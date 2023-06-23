@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol"; // implements IERC721Receiver interface
 
 contract NFTDutchAuction is ERC721Holder {
     address payable public seller;
@@ -34,7 +34,7 @@ contract NFTDutchAuction is ERC721Holder {
         auctionEnded = false;
     }
 
-    function bid() public payable {
+    function bid() public payable returns (address) {
         require(block.number <= startBlock + numBlocksAuctionOpen, "Auction is already ended");
         require(!auctionEnded, "Auction is already ended");
         require(msg.value >= currentPrice(), "Bid must be higher than current price");
@@ -42,10 +42,11 @@ contract NFTDutchAuction is ERC721Holder {
         auctionEnded = true;
         seller.transfer(msg.value); // Transfer the funds to the seller immediately
 
-        // Transfer the NFT to the winner
-        nftContract.safeTransferFrom(address(this), msg.sender, nftTokenId);
+        // Transfer the NFT from the seller to the winner 
+        nftContract.safeTransferFrom(address(seller), msg.sender, nftTokenId);
 
         winner = msg.sender;
+        return winner;
     }
 
     function currentPrice() public view returns (uint256) {
