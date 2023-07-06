@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
+// Uncomment this line to use console.log
+// import "hardhat/console.sol";
+
 contract BasicDutchAuction {
     address payable public seller;
     uint256 public reservePrice;
@@ -8,8 +11,13 @@ contract BasicDutchAuction {
     uint256 public offerPriceDecrement;
     uint256 public initialPrice;
     uint256 public startBlock;
-    bool public auctionEnded;
+    bool public isEnded;
     address public winner;
+
+    modifier isOpenning() {
+        require(!isEnded, "Auction has ended");
+        _; 
+    }
 
     constructor(
         uint256 _reservePrice,
@@ -20,39 +28,30 @@ contract BasicDutchAuction {
         reservePrice = _reservePrice;
         numBlocksAuctionOpen = _numBlocksAuctionOpen;
         offerPriceDecrement = _offerPriceDecrement;
-        initialPrice =
-            reservePrice +
-            numBlocksAuctionOpen *
-            offerPriceDecrement;
+        initialPrice = reservePrice + numBlocksAuctionOpen * offerPriceDecrement;
         startBlock = block.number;
-        auctionEnded = false;
+        isEnded = false;
     }
 
-    function bid() public payable returns (address) {
-        
-        require(
-            block.number <= startBlock + numBlocksAuctionOpen,
-            "Auction is already ended"
-        );
-        require(!auctionEnded, "Auction is already ended");
-        require(
-            msg.value >= currentPrice(),
-            "Bid must be higher than current price"
-        );
-
-        auctionEnded = true;
-        seller.transfer(msg.value); // Transfer the funds to the owner immediately
+    function bid() public payable isOpenning returns (address) {
+        require(block.number < startBlock + numBlocksAuctionOpen, "Auction expired");
+        require(msg.value >= reservePrice, "Bid should be no less than the reserve price");
+        require(msg.value >= currentPrice(), "Bid should be no less than the current price");
+                
         winner = msg.sender;
-
+        finalize(currentPrice());
         return winner;
     }
 
-
     function currentPrice() public view returns (uint256) {
         uint256 elapsedBlocks = block.number - startBlock;
-        if (elapsedBlocks > numBlocksAuctionOpen) {
-            return reservePrice;
-        }
         return initialPrice - elapsedBlocks * offerPriceDecrement;
+    }
+
+    function finalize(uint256 finalAuctionPrice) internal {
+        isEnded = true;
+        
+        seller.transfer(finalAuctionPrice);
+
     }
 }
