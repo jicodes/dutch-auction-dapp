@@ -2,58 +2,62 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol"; // implements IERC721Receiver interface
 
-contract NFTDutchAuction is ERC721Holder {
+contract NFTDutchAuction {
     address payable public seller;
-    IERC721 public nftContract;
-    uint256 public nftTokenId;
     uint256 public reservePrice;
     uint256 public numBlocksAuctionOpen;
     uint256 public offerPriceDecrement;
     uint256 public initialPrice;
     uint256 public startBlock;
-    bool public auctionEnded;
+    bool public isEnded;
     address public winner;
 
+    IERC721 public nftMinter;
+    uint256 public nftTokenId;
+    
+    modifier isOpenning() {
+        require(!isEnded, "Auction has ended");
+        _; 
+    }
+
     constructor(
-        address erc721TokenAddress,
-        uint256 _nftTokenId,
         uint256 _reservePrice,
         uint256 _numBlocksAuctionOpen,
-        uint256 _offerPriceDecrement
+        uint256 _offerPriceDecrement,
+        address erc721TokenAddress,
+        uint256 _nftTokenId
     ) {
         seller = payable(msg.sender);
-        nftContract = IERC721(erc721TokenAddress);
-        nftTokenId = _nftTokenId;
         reservePrice = _reservePrice;
         numBlocksAuctionOpen = _numBlocksAuctionOpen;
         offerPriceDecrement = _offerPriceDecrement;
         initialPrice = reservePrice + numBlocksAuctionOpen * offerPriceDecrement;
         startBlock = block.number;
-        auctionEnded = false;
+        isEnded = false;
+
+        nftMinter = IERC721(erc721TokenAddress);
+        nftTokenId = _nftTokenId;
     }
 
-    function bid() public payable returns (address) {
-        require(block.number <= startBlock + numBlocksAuctionOpen, "Auction is already ended");
-        require(!auctionEnded, "Auction is already ended");
-        require(msg.value >= currentPrice(), "Bid must be higher than current price");
-
-        auctionEnded = true;
-        seller.transfer(msg.value); // Transfer the funds to the seller immediately
-
-        // Transfer the NFT from the seller to the winner 
-        nftContract.safeTransferFrom(address(seller), msg.sender, nftTokenId);
+    function bid() public payable isOpenning returns (address) {
+        require(block.number < startBlock + numBlocksAuctionOpen, "Auction expired");
+        require(msg.value >= currentPrice(), "Bid should be no less than the current price");
 
         winner = msg.sender;
+        finalize(currentPrice());        
         return winner;
     }
 
     function currentPrice() public view returns (uint256) {
         uint256 elapsedBlocks = block.number - startBlock;
-        if (elapsedBlocks > numBlocksAuctionOpen) {
-            return reservePrice;
-        }
         return initialPrice - elapsedBlocks * offerPriceDecrement;
+    }
+
+    function finalize(uint256 finalAuctionPrice) internal {
+        isEnded = true;
+        seller.transfer(finalAuctionPrice);
+        // transfer the NFT to the winner
+        nftMinter.safeTransferFrom(address(seller), winner, nftTokenId);
     }
 }
