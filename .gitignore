@@ -1,0 +1,27 @@
+# Ignore Hardhat artifacts
+artifacts/
+
+# Ignore build output
+build/
+
+# Ignore local development environment variables
+.env
+
+# Ignore npm dependencies
+node_modules/
+
+# Ignore Solidity compiler artifacts
+.cache/
+
+# Ignore TypeScript build output
+dist/
+
+# Ignore project-specific configuration files
+hardhat.config.js
+network.config.js
+
+# Ignore IDE and editor files
+.idea/
+.vscode/
+*.sublime-*
+*.swp
