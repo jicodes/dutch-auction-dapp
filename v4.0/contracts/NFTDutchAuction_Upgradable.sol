@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
-
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
@@ -25,16 +22,11 @@ contract NFTDutchAuction_Upgradable is
     uint256 public startBlock;
     bool public isEnded;
     address public winner;
-    // mapping (address => uint) public bids;
-    // address [] public bidders;
 
     IERC721 public nftMinter;
     uint256 public nftTokenId;
 
     IERC20 public tUSDFaucet;
-
-    // event BidSucceeded(address winner, uint256 bidAmount);
-    // event AuctionSucceeded(address winner, uint256 finalAuctionPrice);
 
     modifier isOpenning() {
         require(!isEnded, "Auction has ended");
@@ -92,21 +84,8 @@ contract NFTDutchAuction_Upgradable is
             "Bidder does not have enough TUSD balance"
         );
 
-        // register the bids
-        // bids[msg.sender] = bidAmount;
-        // bidders.push(msg.sender);
-
         winner = msg.sender;
         finalize(currentPrice());
-
-        // if (bidAmount >= currentPrice()) {
-        //     winner = msg.sender;
-        //     finalize(currentPrice());
-        // } else {
-        //     winner = address(0); // no winner yet
-        // }
-
-        // emit AuctionSucceeded(winner, currentPrice());
         return winner;
     }
 
@@ -121,24 +100,9 @@ contract NFTDutchAuction_Upgradable is
         // transfer the ERC20 token of final Auction Price to the seller
         tUSDFaucet.transferFrom(winner, seller, finalAuctionPrice);
 
-        // emit AuctionSucceeded(winner, finalAuctionPrice);
-
-        // for (uint i = 0; i < bidders.length; i++) {
-        //     if (bidders[i] == winner) {
-        //         // transfer the ERC20 token of final Auction Price to the seller
-        //         bids[winner] = 0;
-        //         tUSDFaucet.transferFrom(winner, seller, finalAuctionPrice);
-        //     } else {
-        //         // refund the other bidders
-        //         uint256 refundAmount = bids[bidders[i]];
-        //         bids[bidders[i]] = 0;
-        //         tUSDFaucet.transferFrom(address(this), bidders[i], refundAmount);
-        //     }
-        // }
-
-        // transfer the NFT to the winner
         nftMinter.safeTransferFrom(address(seller), winner, nftTokenId);
     }
 
+    // UUPS upgradeable, only owner can upgrade
     function _authorizeUpgrade(address) internal override onlyOwner {}
 }
