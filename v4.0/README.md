@@ -33,8 +33,6 @@ An Ethereum decentralized application for conducting an upgradable Dutch Auction
 
 ## NFTDutchAuction_Upgradable Contract Methods
 
-### NFTDutchAuction_ERC20Bids
-
 ### initialize(uint256 _reservePrice, uint256 _numBlocksAuctionOpen, uint256 _offerPriceDecrement, address erc721TokenAddress, uint256 _nftTokenId, address erc20TokenAddress)
 Initializes the auction with parameters. This replaces the constructor for upgradeable contracts.
 
