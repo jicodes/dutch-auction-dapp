@@ -101,8 +101,8 @@ export function Bidding(): ReactElement {
     }
     async function submitBid(auctionContract: Contract, singer: Signer, bidAmount: number): Promise<void> {
         if (isEnded) {
-            setBidResult('No accepted anymore. Auction has ended');
-            window.alert('No accepted anymore. Auction has ended');
+            setBidResult('No nid accepted anymore. Auction has ended');
+            window.alert('No bid accepted anymore. Auction has ended');
             return;
         }
 
