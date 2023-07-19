@@ -1,4 +1,4 @@
-# NFT Dutch Auction
+# v2.0 NFT Dutch Auction
 
 Smart contract for conducting an NFT Dutch Auction with bidding in ETH.
 

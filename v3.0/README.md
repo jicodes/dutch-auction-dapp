@@ -1,4 +1,4 @@
-# NFT Dutch Auction with ERC20 Token Bids
+# v3.0 NFT Dutch Auction with ERC20 Token Bids
 
 Smart contract for conducting an NFT Dutch Auction with bidding in ERC20 tokens.
 

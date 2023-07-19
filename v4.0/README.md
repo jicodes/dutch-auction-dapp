@@ -1,4 +1,4 @@
-# NFT Dutch Auction with ERC20 Token Bids (Upgradable)
+# v4.0 NFT Dutch Auction with ERC20 Token Bids (Upgradable)
 
 Smart contract for conducting an upgradable NFT Dutch Auction with bidding in ERC20 tokens.
 
