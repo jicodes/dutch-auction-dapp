@@ -1,6 +1,6 @@
-# NFT Dutch Auction Dapp with ERC20 Token Bids (Upgradable)
+# NFT Dutch Auction with ERC20 Token Bids (Upgradable)
 
-An Ethereum decentralized application for conducting an upgradable Dutch Auction of an NFT using ERC20 token (TUSD) bids.
+Smart contract for conducting an upgradable NFT Dutch Auction with bidding in ERC20 tokens, including the permit feature.
 
 ## Introduction
 

@@ -1,6 +1,6 @@
-# NFT Dutch Auction Dapp
+# NFT Dutch Auction
 
-A decentralized application for conducting a Dutch Auction of an NFT on the Ethereum blockchain.
+Smart contract for conducting an NFT Dutch Auction with bidding in ETH.
 
 ## Introduction
 

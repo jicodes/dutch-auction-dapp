@@ -1,4 +1,4 @@
-# Dutch Auction DApp utilizing React Typescript Ethers.js Web3-react Hardhat 
+# Dutch Auction Dapp developed with hardhat, ethers and react using typescript and web3-react 
 
 This project is built on top of [ChainShot](https://www.chainshot.com)'s [How to Build a React Dapp with Hardhat and MetaMask](https://medium.com/p/9cec8f6410d3) Medium article.
 

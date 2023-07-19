@@ -1,6 +1,6 @@
-# NFT Dutch Auction Dapp with ERC20 Token Bids
+# NFT Dutch Auction with ERC20 Token Bids
 
-A decentralized application for conducting a Dutch Auction of an NFT on the Ethereum blockchain where bids are made using an ERC20 token (TUSD) instead of ETH.
+Smart contract for conducting an NFT Dutch Auction with bidding in ERC20 tokens.
 
 ## Introduction
 

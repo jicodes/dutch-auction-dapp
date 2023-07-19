@@ -1,4 +1,4 @@
-# Basic Dutch Auction Dapp
+# Basic Dutch Auction
 
 A simple Ethereum smart contract for conducting a Dutch Auction.
 
