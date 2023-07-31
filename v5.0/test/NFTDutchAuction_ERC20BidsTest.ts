@@ -4,7 +4,7 @@ import { AbiCoder } from "ethers";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
 
-describe("NFTDutchAuction_Upgradable", function () {
+describe("NFTDutchAuction_Upgradable_Signature", function () {
 
   async function deployDutchAuctionFixture() {
     const [seller, bidder1, bidder2] = await ethers.getSigners();
@@ -162,8 +162,8 @@ describe("NFTDutchAuction_Upgradable", function () {
       await expect(nftDutchAuctionProxy.connect(bidder2).bid(bidAmount)).to.be.revertedWith("Bidder does not have enough TUSD balance");
     });
 
-    // test permit   
-    it("Successful bid should make bidder the winner and end the auction", async function () {
+    // Permit test  
+    it("Test signature: Successful bid should make bidder the winner and end the auction", async function () {
       const { tUSDFaucet, tUSDFaucetAddress, nftDutchAuctionProxy, bidder1 } = await loadFixture(deployDutchAuctionFixture);
 
       const nftDutchAuctionProxyAddress = await nftDutchAuctionProxy.getAddress();
